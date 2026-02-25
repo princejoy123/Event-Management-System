@@ -8,9 +8,13 @@ const generateToken = (payload: any, secret: Secret, expiresIn: string) => {
     );
 
     return token
-
 };
 
+const verifyToken = (token: string, secret: Secret) =>{
+
+}
+
 export const jwtHelper = {
-    generateToken
+    generateToken,
+    verifyToken
 }

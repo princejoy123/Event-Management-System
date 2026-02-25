@@ -29,7 +29,7 @@ const getAllEvents = catchAsync(async (req: Request, res: Response) => {
 
 
 const getSingleEvent = catchAsync(async (req: Request, res: Response) => {
-  const result = await EventService.getSingleEvent(req.params.id);
+  const result = await EventService.getSingleEvent(req.params.id as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -41,7 +41,7 @@ const getSingleEvent = catchAsync(async (req: Request, res: Response) => {
 
 
 const updateEvent = catchAsync(async (req: Request, res: Response) => {
-  const result = await EventService.updateEvent(req.params.id, req.body);
+  const result = await EventService.updateEvent(req.params.id as string, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -53,13 +53,13 @@ const updateEvent = catchAsync(async (req: Request, res: Response) => {
 
 
 const deleteEvent = catchAsync(async (req: Request, res: Response) => {
-  const result = await EventService.deleteEvent(req.params.id);
+  const result = await EventService.deleteEvent(req.params.id as string);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Event deleted successfully!",
-    data: result
+    data: null
   });
 });
 

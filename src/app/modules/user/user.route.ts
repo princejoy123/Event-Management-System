@@ -15,6 +15,25 @@ router.post(
   }
 );
 
+
+router.get("/", UserController.getAllUsers);
+
+
+router.get("/:id", UserController.getSingleUser);
+
+
+router.patch(
+  "/:id",
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = userValidationSchema.updateUserZodValidationSchema.parse(req.body);
+    return UserController.updateUser(req, res, next);
+  }
+);
+
+
+router.delete("/:id", UserController.deleteUser);
+
+
 router.post(
   "/create-host",
   (req: Request, res: Response, next: NextFunction ) => {
@@ -36,4 +55,6 @@ router.post(
 )
 
 export const userRoutes = router;
+
+
 

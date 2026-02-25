@@ -1,14 +1,17 @@
 import express, { Request, Response, NextFunction } from "express";
 import { EventController } from "./event.controller";
-import { eventValidationSchema } from "./event.validation";
+import { eventValidation } from "./event.validation";
+import auth from "../../middleware/auth";
+import { UserRole } from "../../../../prisma/generated/enums";
 
 const router = express.Router();
 
 router.post(
   "/create-event",
+  auth(UserRole.ADMIN),
   (req: Request, res: Response, next: NextFunction) => {
     req.body =
-      eventValidationSchema.createEventValidationSchema.parse(req.body);
+      eventValidation.createEventZodValidationSchema.parse(req.body);
 
     return EventController.createEvent(req, res, next);
   }
@@ -21,7 +24,7 @@ router.patch(
   "/:id",
   (req: Request, res: Response, next: NextFunction) => {
     req.body =
-      eventValidationSchema.updateEventValidationSchema.parse(req.body);
+      eventValidation.updateEventZodValidationSchema.parse(req.body);
 
     return EventController.updateEvent(req, res, next);
   }
