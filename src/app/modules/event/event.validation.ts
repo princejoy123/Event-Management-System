@@ -1,13 +1,14 @@
 import z from "zod";
 
 const createEventZodValidationSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  location: z.string(),
-  date: z.string(),
-  price: z.number(),
-  capacity: z.number().int().positive(),
-  createdById: z.string()
+  body:z.object({
+    title: z.string(),
+    description: z.string(),
+    location: z.string(),
+    date: z.string(),
+    price: z.number(),
+    capacity: z.number().int().positive(),
+  })
 });
 
 const updateEventZodValidationSchema = z.object({

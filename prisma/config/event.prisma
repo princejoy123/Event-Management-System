@@ -1,19 +1,129 @@
 
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  events    Event[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+
 
 model Event {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  location    String
-  date        DateTime
-  price       Float
-  capacity    Int
-  createdById String
+  id           String      @id @default(uuid())
+  title        String
+  description  String
+  location     String
+  date         DateTime
+  image        String?
+  status       EventStatus @default(DRAFT)
+  price        Float
+  capacity     Int
 
-  createdBy   User     @relation(fields: [createdById], references: [id])
+  categoryId   String?
+  createdById  String
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  category     Category?  @relation(fields: [categoryId], references: [id])
+  createdBy    User       @relation("UserEvents", fields: [createdById], references: [id])
+
+  tickets      Ticket[]
+  bookings     Booking[]
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
   @@map("events")
 }
+
+
+
+model Ticket {
+  id            String      @id @default(uuid())
+  eventId       String
+  name          String
+  description   String?
+  type          TicketType  @default(PAID)
+  price         Decimal     @default(0)
+  currency      String      @default("BDT")
+  totalQuantity Int         @default(100)
+  soldQuantity  Int         @default(0)
+
+  saleStartDate DateTime?
+  saleEndDate   DateTime?
+  isActive      Boolean     @default(true)
+
+  event         Event       @relation(fields: [eventId], references: [id])
+  bookingItems  BookingItem[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("tickets")
+}
+
+
+
+model Booking {
+  id            String         @id @default(uuid())
+  userId        String
+  eventId       String
+  totalAmount   Decimal
+  status        BookingStatus  @default(PENDING)
+
+  user          User           @relation(fields: [userId], references: [id])
+  event         Event          @relation(fields: [eventId], references: [id])
+  bookingItems  BookingItem[]
+  payment       Payment?
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("bookings")
+}
+
+
+
+model BookingItem {
+  id         String   @id @default(uuid())
+  bookingId  String
+  ticketId   String
+  quantity   Int
+  price      Decimal
+
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+  ticket     Ticket   @relation(fields: [ticketId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("booking_items")
+}
+
+
+
+model Payment {
+  id            String        @id @default(uuid())
+  bookingId     String        @unique
+  transactionId String?
+  method        PaymentMethod
+  status        PaymentStatus @default(UNPAID)
+  amount        Decimal
+
+  booking       Booking       @relation(fields: [bookingId], references: [id])
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+
+
+
+
+
+
+

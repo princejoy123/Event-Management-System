@@ -4,8 +4,12 @@ import sendResponse from "../../shared/sendResponse";
 import { EventService } from "./event.service";
 import httpStatus from "http-status-codes";
 
-const createEvent = catchAsync(async (req: Request, res: Response) => {
-  const result = await EventService.createEvent(req);
+const createEvent = catchAsync(async (req: Request & { user?: any }, res: Response) => {
+
+  const result = await EventService.createEvent({
+    ...req.body,
+    createdById: req.user!.id
+  });
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -14,7 +18,6 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
     data: result
   });
 });
-
 
 const getAllEvents = catchAsync(async (req: Request, res: Response) => {
   const result = await EventService.getAllEvents(req);

@@ -2,23 +2,21 @@ import { Request } from "express";
 import { prisma } from "../../shared/prisma";
 
 
-const createEvent = async (req: Request) => {
+const createEvent = async (payload: any) => {
   const result = await prisma.event.create({
-    data: {
-      title: req.body.title,
-      description: req.body.description,
-      location: req.body.location,
-      date: new Date(req.body.date),
-      price: req.body.price,
-      capacity: req.body.capacity,
-      createdById: req.body.createdById
-    }
-  });
+      data: {
+        title: payload.title,
+        description: payload.description,
+        location: payload.location,
+        date: new Date(payload.date),
+        price: payload.price,
+        capacity: payload.capacity,
+        createdById: payload.createdById
+      }
+    });
 
   return result;
 };
-
-
 
 const getAllEvents = async (req: Request) => {
   const page = Number(req.query.page) || 1;
@@ -50,15 +48,15 @@ const getAllEvents = async (req: Request) => {
 
 
 
-const getSingleEvent = async ( id: string) => {
-    const result = await prisma.event.findUnique({
-        where: {id},
-        include: {
-            createdBy: true
-        }
-    })
+const getSingleEvent = async (id: string) => {
+  const result = await prisma.event.findUnique({
+    where: { id },
+    include: {
+      createdBy: true
+    }
+  })
 
-    return result
+  return result
 }
 
 

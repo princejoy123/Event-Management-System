@@ -1,26 +1,37 @@
-import { NextFunction, Request, Response } from "express"
-import { jwtHelper } from "../Helper/jwtHelper"
-import config from "../config"
+import jwt from "jsonwebtoken";
+import httpStatus from "http-status-codes";
+import config from "../config";
+import { NextFunction, Response } from "express";
+import ApiError from "../errors/ApiErrors";
 
-
-const auth = (...roles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+ const auth = (...requiredRoles: string[]) => {
+  return (req: any, res: Response, next: NextFunction) => {
     try {
-      const token = req.cookies?.accessToken;
+      const authHeader = req.cookies?.accessToken || req.headers.authorization;
 
-      if (!token) {
-        return res.status(401).json({
-          success: false,
-          message: "You are not authorized",
-        });
+      if (!authHeader) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
       }
 
-      const verifiedUser = jwtHelper.verifyToken(
-        token,
-        config.jwt.jwt_secret as string
-      );
+      const token = authHeader.split(" ")[1];
 
-      req.user = verifiedUser;
+      if (!token) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized..!");
+      }
+
+      const decoded = jwt.verify(
+        token,
+        "abusaiyed"
+      ) as any;
+
+      req.user = decoded;
+
+      if (
+        requiredRoles.length &&
+        !requiredRoles.includes(decoded.role)
+      ) {
+        throw new ApiError(httpStatus.FORBIDDEN, "Forbidden access");
+      }
 
       next();
     } catch (error) {
@@ -28,5 +39,4 @@ const auth = (...roles: string[]) => {
     }
   };
 };
-
 export default auth;

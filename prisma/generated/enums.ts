@@ -10,9 +10,10 @@
 */
 
 export const UserRole = {
-  USER: 'USER',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
   HOST: 'HOST',
-  ADMIN: 'ADMIN'
+  USER: 'USER'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -20,8 +21,53 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 export const UserStatus = {
   ACTIVE: 'ACTIVE',
-  DEACTIVE: 'DEACTIVE',
   BLOCKED: 'BLOCKED'
 } as const
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const EventStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
+
+
+export const TicketType = {
+  FREE: 'FREE',
+  PAID: 'PAID'
+} as const
+
+export type TicketType = (typeof TicketType)[keyof typeof TicketType]
+
+
+export const BookingStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
+
+
+export const PaymentStatus = {
+  UNPAID: 'UNPAID',
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const PaymentMethod = {
+  STRIPE: 'STRIPE',
+  SSL_COMMERZ: 'SSL_COMMERZ',
+  CASH: 'CASH'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]

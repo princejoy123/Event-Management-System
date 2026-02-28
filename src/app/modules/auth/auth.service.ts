@@ -16,9 +16,9 @@ const login = async ( payload: {email: string, password: string}) => {
         throw new Error("Password doesn't match")
     }
 
-    const accessToken = jwtHelper.generateToken({email: user.email, password: user.password}, "abusaiyed", '1d');
+    const accessToken = jwtHelper.generateToken({id: user.id, email: user.email, password: user.password, role: user.role}, "abusaiyed", '1d');
 
-    const refreshToken = jwtHelper.generateToken({email: user.email, password: user.password}, "abusaiyedjoy", '30d')
+    const refreshToken = jwtHelper.generateToken({email: user.email, password: user.password, role: user.role}, "abusaiyedjoy", '30d')
 
     return {
         accessToken,

@@ -1,20 +1,17 @@
 import express, { Request, Response, NextFunction } from "express";
 import { EventController } from "./event.controller";
 import { eventValidation } from "./event.validation";
-import auth from "../../middleware/auth";
 import { UserRole } from "../../../../prisma/generated/enums";
+import validateRequest from "../../middleware/validateRequest";
+import auth from "../../middleware/auth";
 
 const router = express.Router();
 
 router.post(
   "/create-event",
-  auth(UserRole.ADMIN),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body =
-      eventValidation.createEventZodValidationSchema.parse(req.body);
-
-    return EventController.createEvent(req, res, next);
-  }
+  auth(UserRole.HOST),
+  validateRequest(eventValidation.createEventZodValidationSchema),
+  EventController.createEvent
 );
 
 router.get("/", EventController.getAllEvents);

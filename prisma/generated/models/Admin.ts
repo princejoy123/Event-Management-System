@@ -366,10 +366,6 @@ export type AdminUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutUserInput, Prisma.AdminUpdateWithoutUserInput>, Prisma.AdminUncheckedUpdateWithoutUserInput>
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type AdminCreateWithoutUserInput = {
   id?: string
   contactNumber: string

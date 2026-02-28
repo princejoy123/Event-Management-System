@@ -27,6 +27,9 @@ export type AggregateHost = {
 export type HostMinAggregateOutputType = {
   id: string | null
   userId: string | null
+  bio: string | null
+  website: string | null
+  isVerified: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -34,6 +37,9 @@ export type HostMinAggregateOutputType = {
 export type HostMaxAggregateOutputType = {
   id: string | null
   userId: string | null
+  bio: string | null
+  website: string | null
+  isVerified: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -41,6 +47,9 @@ export type HostMaxAggregateOutputType = {
 export type HostCountAggregateOutputType = {
   id: number
   userId: number
+  bio: number
+  website: number
+  isVerified: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -50,6 +59,9 @@ export type HostCountAggregateOutputType = {
 export type HostMinAggregateInputType = {
   id?: true
   userId?: true
+  bio?: true
+  website?: true
+  isVerified?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -57,6 +69,9 @@ export type HostMinAggregateInputType = {
 export type HostMaxAggregateInputType = {
   id?: true
   userId?: true
+  bio?: true
+  website?: true
+  isVerified?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -64,6 +79,9 @@ export type HostMaxAggregateInputType = {
 export type HostCountAggregateInputType = {
   id?: true
   userId?: true
+  bio?: true
+  website?: true
+  isVerified?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -144,6 +162,9 @@ export type HostGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type HostGroupByOutputType = {
   id: string
   userId: string
+  bio: string | null
+  website: string | null
+  isVerified: boolean
   createdAt: Date
   updatedAt: Date
   _count: HostCountAggregateOutputType | null
@@ -172,6 +193,9 @@ export type HostWhereInput = {
   NOT?: Prisma.HostWhereInput | Prisma.HostWhereInput[]
   id?: Prisma.StringFilter<"Host"> | string
   userId?: Prisma.StringFilter<"Host"> | string
+  bio?: Prisma.StringNullableFilter<"Host"> | string | null
+  website?: Prisma.StringNullableFilter<"Host"> | string | null
+  isVerified?: Prisma.BoolFilter<"Host"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Host"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Host"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -180,6 +204,9 @@ export type HostWhereInput = {
 export type HostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  website?: Prisma.SortOrderInput | Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -191,6 +218,9 @@ export type HostWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.HostWhereInput | Prisma.HostWhereInput[]
   OR?: Prisma.HostWhereInput[]
   NOT?: Prisma.HostWhereInput | Prisma.HostWhereInput[]
+  bio?: Prisma.StringNullableFilter<"Host"> | string | null
+  website?: Prisma.StringNullableFilter<"Host"> | string | null
+  isVerified?: Prisma.BoolFilter<"Host"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Host"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Host"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -199,6 +229,9 @@ export type HostWhereUniqueInput = Prisma.AtLeast<{
 export type HostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  website?: Prisma.SortOrderInput | Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HostCountOrderByAggregateInput
@@ -212,12 +245,18 @@ export type HostScalarWhereWithAggregatesInput = {
   NOT?: Prisma.HostScalarWhereWithAggregatesInput | Prisma.HostScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Host"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Host"> | string
+  bio?: Prisma.StringNullableWithAggregatesFilter<"Host"> | string | null
+  website?: Prisma.StringNullableWithAggregatesFilter<"Host"> | string | null
+  isVerified?: Prisma.BoolWithAggregatesFilter<"Host"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Host"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Host"> | Date | string
 }
 
 export type HostCreateInput = {
   id?: string
+  bio?: string | null
+  website?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutHostInput
@@ -226,12 +265,18 @@ export type HostCreateInput = {
 export type HostUncheckedCreateInput = {
   id?: string
   userId: string
+  bio?: string | null
+  website?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type HostUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutHostNestedInput
@@ -240,6 +285,9 @@ export type HostUpdateInput = {
 export type HostUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -247,12 +295,18 @@ export type HostUncheckedUpdateInput = {
 export type HostCreateManyInput = {
   id?: string
   userId: string
+  bio?: string | null
+  website?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type HostUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -260,6 +314,9 @@ export type HostUpdateManyMutationInput = {
 export type HostUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -272,6 +329,9 @@ export type HostNullableScalarRelationFilter = {
 export type HostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  website?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -279,6 +339,9 @@ export type HostCountOrderByAggregateInput = {
 export type HostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  website?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -286,6 +349,9 @@ export type HostMaxOrderByAggregateInput = {
 export type HostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
+  website?: Prisma.SortOrder
+  isVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -324,12 +390,18 @@ export type HostUncheckedUpdateOneWithoutUserNestedInput = {
 
 export type HostCreateWithoutUserInput = {
   id?: string
+  bio?: string | null
+  website?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type HostUncheckedCreateWithoutUserInput = {
   id?: string
+  bio?: string | null
+  website?: string | null
+  isVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -352,12 +424,18 @@ export type HostUpdateToOneWithWhereWithoutUserInput = {
 
 export type HostUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HostUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -367,6 +445,9 @@ export type HostUncheckedUpdateWithoutUserInput = {
 export type HostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  bio?: boolean
+  website?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -375,6 +456,9 @@ export type HostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type HostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  bio?: boolean
+  website?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -383,6 +467,9 @@ export type HostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type HostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  bio?: boolean
+  website?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -391,11 +478,14 @@ export type HostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type HostSelectScalar = {
   id?: boolean
   userId?: boolean
+  bio?: boolean
+  website?: boolean
+  isVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["host"]>
+export type HostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "bio" | "website" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["host"]>
 export type HostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -414,6 +504,9 @@ export type $HostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
+    bio: string | null
+    website: string | null
+    isVerified: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["host"]>
@@ -842,6 +935,9 @@ export interface Prisma__HostClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface HostFieldRefs {
   readonly id: Prisma.FieldRef<"Host", 'String'>
   readonly userId: Prisma.FieldRef<"Host", 'String'>
+  readonly bio: Prisma.FieldRef<"Host", 'String'>
+  readonly website: Prisma.FieldRef<"Host", 'String'>
+  readonly isVerified: Prisma.FieldRef<"Host", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Host", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Host", 'DateTime'>
 }

@@ -3,16 +3,26 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../shared/prisma";
 import config from "../../config";
 import { UserRole, UserStatus } from "../../../../prisma/generated/enums";
+import { fileUploader } from "../../Helper/fileUploader";
+import { User } from "../../../../prisma/generated/client";
 
-const createUser = async (req: Request) => {
-  const hashPassword = await bcrypt.hash(req.body.password, Number(config.bcrypt_salt_round));
+const createUser = async (payload: User, file: Express.Multer.File) => {
+  if (file) {
+        const uploadResult = await fileUploader.uploadToCloudinary(file)
+        console.log(uploadResult)
+        payload.profilePhoto = uploadResult?.secure_url  as string
+        
+    }
+
+  const hashPassword = await bcrypt.hash(payload.password, Number(config.bcrypt_salt_round));
 
   const user = await prisma.user.create({
     data: {
-      name: req.body.name,
-      email: req.body.email,
+      name: payload.name,
+      email: payload.email,
       password: hashPassword,
-      role: req.body.role || UserRole.USER,
+      role: payload.role || UserRole.USER,
+      profilePhoto: payload.profilePhoto,
       status: UserStatus.ACTIVE
     }
   });
@@ -27,10 +37,7 @@ const getAllUsers = async (req: Request) => {
 
   const users = await prisma.user.findMany({
     skip,
-    take: limit,
-    orderBy: {
-      createdAt: "desc"
-    },
+    take: limit
   });
 
   const total = await prisma.user.count();

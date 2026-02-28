@@ -7,7 +7,7 @@ import httpStatus from "http-status-codes"
 
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.createUser(req);
+  const result = await UserService.createUser(req.body, req.file as Express.Multer.File);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

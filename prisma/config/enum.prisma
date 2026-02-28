@@ -1,12 +1,42 @@
-
 enum UserRole {
-    USER
-    HOST
-    ADMIN
+  SUPER_ADMIN
+  ADMIN
+  HOST
+  USER
 }
 
 enum UserStatus {
-    ACTIVE
-    DEACTIVE
-    BLOCKED
+  ACTIVE
+  BLOCKED
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum TicketType {
+  FREE
+  PAID
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  STRIPE
+  SSL_COMMERZ
+  CASH
 }
