@@ -1,6 +1,7 @@
 import { Server } from "http";
 import app from "./app";
 import config from "./config";
+import seedSuperAdmin from "./Helper/seed";
 
 
 
@@ -8,6 +9,10 @@ async function startServer() {
     let server: Server
 
     try {
+
+        await seedSuperAdmin()
+
+
         server = app.listen(config.port, () => {
             console.log("Server is running...");
         });

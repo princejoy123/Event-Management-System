@@ -8,11 +8,10 @@ import { User } from "../../../../prisma/generated/client";
 
 const createUser = async (payload: User, file: Express.Multer.File) => {
   if (file) {
-        const uploadResult = await fileUploader.uploadToCloudinary(file)
-        console.log(uploadResult)
-        payload.profilePhoto = uploadResult?.secure_url  as string
-        
-    }
+    const uploadResult = await fileUploader.uploadToCloudinary(file)
+    payload.profilePhoto = uploadResult?.secure_url as string
+
+  }
 
   const hashPassword = await bcrypt.hash(payload.password, Number(config.bcrypt_salt_round));
 
@@ -21,7 +20,6 @@ const createUser = async (payload: User, file: Express.Multer.File) => {
       name: payload.name,
       email: payload.email,
       password: hashPassword,
-      role: payload.role || UserRole.USER,
       profilePhoto: payload.profilePhoto,
       status: UserStatus.ACTIVE
     }
@@ -76,78 +74,78 @@ const deleteUser = async (id: string) => {
 
 
 const createHost = async (req: Request) => {
-    const hashPassword = await bcrypt.hash(
-        req.body.password,
-        config.bcrypt_salt_round
-    );
+  const hashPassword = await bcrypt.hash(
+    req.body.password,
+    config.bcrypt_salt_round
+  );
 
-    const result = await prisma.$transaction(async (tnx) => {
+  const result = await prisma.$transaction(async (tnx) => {
 
-        const user = await tnx.user.create({
-            data: {
-                name: req.body.name,
-                email: req.body.email,
-                password: hashPassword,
-                role: UserRole.HOST
-            }
-        });
-
-        const host = await tnx.host.create({
-            data: {
-                userId: user.id
-            }
-        });
-
-        return host;
+    const user = await tnx.user.create({
+      data: {
+        name: req.body.name,
+        email: req.body.email,
+        password: hashPassword,
+        role: UserRole.HOST
+      }
     });
 
-    return result;
+    const host = await tnx.host.create({
+      data: {
+        userId: user.id
+      }
+    });
+
+    return host;
+  });
+
+  return result;
 };
 
 const createAdmin = async (req: Request) => {
-    const hashPassword = await bcrypt.hash(
-        req.body.password,
-        config.bcrypt_salt_round
-    );
+  const hashPassword = await bcrypt.hash(
+    req.body.password,
+    config.bcrypt_salt_round
+  );
 
-    const result = await prisma.$transaction(async (tnx) => {
+  const result = await prisma.$transaction(async (tnx) => {
 
-        const isUserExist = await tnx.user.findUnique({
-            where: { email: req.body.email }
-        });
-
-        if (isUserExist) {
-            throw new Error("User already exists with this email");
-        }
-
-        const user = await tnx.user.create({
-            data: {
-                name: req.body.name,
-                email: req.body.email,
-                password: hashPassword,
-                role: UserRole.ADMIN
-            }
-        });
-
-        const admin = await tnx.admin.create({
-            data: {
-                userId: user.id,
-                contactNumber: req.body.contactNumber
-            }
-        });
-
-        return admin;
+    const isUserExist = await tnx.user.findUnique({
+      where: { email: req.body.email }
     });
 
-    return result;
+    if (isUserExist) {
+      throw new Error("User already exists with this email");
+    }
+
+    const user = await tnx.user.create({
+      data: {
+        name: req.body.name,
+        email: req.body.email,
+        password: hashPassword,
+        role: UserRole.ADMIN
+      }
+    });
+
+    const admin = await tnx.admin.create({
+      data: {
+        userId: user.id,
+        contactNumber: req.body.contactNumber
+      }
+    });
+
+    return admin;
+  });
+
+  return result;
 };
 
 export const UserService = {
-    createUser,
-    getAllUsers,
-    getSingleUser,
-    updateUser,
-    deleteUser,
-    createHost,
-    createAdmin
+  createUser,
+  getAllUsers,
+  getSingleUser,
+  updateUser,
+  deleteUser,
+  createHost,
+  createAdmin
 };

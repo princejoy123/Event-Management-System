@@ -3,6 +3,7 @@ import { authRoutes } from "../modules/auth/auth.route";
 import { userRoutes } from "../modules/user/user.route";
 import { eventRoutes } from "../modules/event/event.route";
 import { bookingRoutes } from "../modules/booking/booking.route";
+import { paymentRoutes } from "../modules/payment/payment.route";
 
 const router = express.Router()
 
@@ -22,9 +23,13 @@ const moduleRoutes = [
     {
         path: "/booking",
         route: bookingRoutes
+    },
+    {
+        path: "/payment",
+        route: paymentRoutes
     }
 ]
 
-moduleRoutes.forEach(route =>{router.use(route.path, route.route)})
+moduleRoutes.forEach(route => { router.use(route.path, route.route) })
 
 export default router;

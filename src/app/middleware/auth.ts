@@ -7,21 +7,23 @@ import ApiError from "../errors/ApiErrors";
  const auth = (...requiredRoles: string[]) => {
   return (req: any, res: Response, next: NextFunction) => {
     try {
-      const authHeader = req.cookies?.accessToken || req.headers.authorization;
+      let token;
 
-      if (!authHeader) {
-        throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
+      if (req.cookies?.accessToken) {
+        token = req.cookies.accessToken;
       }
 
-      const token = authHeader.split(" ")[1];
+      else if (req.headers.authorization) {
+        token = req.headers.authorization.split(" ")[1];
+      }
 
       if (!token) {
-        throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized..!");
+        throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
       }
 
       const decoded = jwt.verify(
         token,
-        "abusaiyed"
+        config.jwt.jwt_secret!
       ) as any;
 
       req.user = decoded;
@@ -39,4 +41,5 @@ import ApiError from "../errors/ApiErrors";
     }
   };
 };
+
 export default auth;

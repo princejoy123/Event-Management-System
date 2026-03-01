@@ -2,6 +2,9 @@ import express, { NextFunction, Request, Response } from "express"
 import { UserController } from "./user.controller"
 import { userValidationSchema } from "./user.validation";
 import { fileUploader } from "../../Helper/fileUploader";
+import validateRequest from "../../middleware/validateRequest";
+import auth from "../../middleware/auth";
+import { UserRole } from "../../../../prisma/generated/enums";
 
 
 const router = express.Router()
@@ -9,16 +12,12 @@ const router = express.Router()
 router.post(
   "/create-user",
   fileUploader.upload.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body =
-      userValidationSchema.createUserZodValidationSchema.parse(JSON.parse(req.body.data));
-
-    return UserController.createUser(req, res, next);
-  }
+  validateRequest(userValidationSchema.createUserZodValidationSchema),
+  UserController.createUser
 );
 
 
-router.get("/", UserController.getAllUsers);
+router.get("/", auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), UserController.getAllUsers);
 
 
 router.get("/:id", UserController.getSingleUser);
@@ -26,34 +25,26 @@ router.get("/:id", UserController.getSingleUser);
 
 router.patch(
   "/:id",
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = userValidationSchema.updateUserZodValidationSchema.parse(req.body);
-    return UserController.updateUser(req, res, next);
-  }
+  validateRequest(userValidationSchema.updateUserZodValidationSchema),
+  UserController.updateUser
 );
 
 
-router.delete("/:id", UserController.deleteUser);
+router.delete("/:id", auth(UserRole.ADMIN), UserController.deleteUser);
 
 
 router.post(
   "/create-host",
-  (req: Request, res: Response, next: NextFunction ) => {
-    req.body = 
-      userValidationSchema.createHostZodValidationSchema.parse(req.body);
-
-      return UserController.createHost(req, res, next)
-  }
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(userValidationSchema.createHostZodValidationSchema),
+  UserController.createHost
 )
 
 router.post(
   "/create-admin",
-  (req: Request, res: Response, next: NextFunction ) => {
-    req.body = 
-      userValidationSchema.createAdminZodValidationSchema.parse(req.body);
-
-      return UserController.createAdmin(req, res, next)
-  }
+  auth(UserRole.SUPER_ADMIN),
+  validateRequest(userValidationSchema.createAdminZodValidationSchema),
+  UserController.createAdmin
 )
 
 export const userRoutes = router;

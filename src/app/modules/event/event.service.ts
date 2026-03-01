@@ -2,18 +2,19 @@ import { Request } from "express";
 import { prisma } from "../../shared/prisma";
 
 
+
 const createEvent = async (payload: any) => {
   const result = await prisma.event.create({
-      data: {
-        title: payload.title,
-        description: payload.description,
-        location: payload.location,
-        date: new Date(payload.date),
-        price: payload.price,
-        capacity: payload.capacity,
-        createdById: payload.createdById
-      }
-    });
+    data: {
+      title: payload.title,
+      description: payload.description,
+      location: payload.location,
+      date: new Date(payload.date),
+      price: payload.price,
+      capacity: payload.capacity,
+      createdById: payload.createdById
+    }
+  });
 
   return result;
 };

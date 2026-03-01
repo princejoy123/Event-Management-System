@@ -1,7 +1,8 @@
 import z from "zod";
 
+
 const createEventZodValidationSchema = z.object({
-  body:z.object({
+  body: z.object({
     title: z.string(),
     description: z.string(),
     location: z.string(),
@@ -12,12 +13,14 @@ const createEventZodValidationSchema = z.object({
 });
 
 const updateEventZodValidationSchema = z.object({
-  title: z.string().optional(),
-  description: z.string().optional(),
-  location: z.string().optional(),
-  date: z.string().optional(),
-  price: z.number().optional(),
-  capacity: z.number().int().positive().optional()
+  body: z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    location: z.string().optional(),
+    date: z.string().optional(),
+    price: z.number().optional(),
+    capacity: z.number().int().positive().optional()
+  })
 });
 
 export const eventValidation = {

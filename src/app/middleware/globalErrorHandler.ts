@@ -3,7 +3,6 @@ import httpStatus from "http-status-codes"
 
 
 const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    console.log("From Global Error Handler", err)
 
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,

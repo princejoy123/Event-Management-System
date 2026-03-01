@@ -7,6 +7,7 @@ import httpStatus from "http-status-codes"
 
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
+
   const result = await UserService.createUser(req.body, req.file as Express.Multer.File);
 
   sendResponse(res, {
@@ -62,34 +63,34 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-const createHost = catchAsync(async (req: Request, res: Response) =>{
-    const result = await UserService.createHost(req)
+const createHost = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.createHost(req)
 
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Host created successfully",
-        data: result
-    })
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Host created successfully",
+    data: result
+  })
 })
 
-const createAdmin = catchAsync(async (req: Request, res: Response) =>{
-    const result = await UserService.createAdmin(req)
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.createAdmin(req)
 
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Admin created successfully",
-        data: result
-    })
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Admin created successfully",
+    data: result
+  })
 })
 
 export const UserController = {
-    createUser,
-    getAllUsers,
-    getSingleUser,
-    updateUser,
-    deleteUser,
-    createHost,
-    createAdmin
+  createUser,
+  getAllUsers,
+  getSingleUser,
+  updateUser,
+  deleteUser,
+  createHost,
+  createAdmin
 }

@@ -5,6 +5,7 @@ import { UserRole } from "../../../../prisma/generated/enums";
 import validateRequest from "../../middleware/validateRequest";
 import auth from "../../middleware/auth";
 
+
 const router = express.Router();
 
 router.post(
@@ -19,14 +20,11 @@ router.get("/:id", EventController.getSingleEvent);
 
 router.patch(
   "/:id",
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body =
-      eventValidation.updateEventZodValidationSchema.parse(req.body);
-
-    return EventController.updateEvent(req, res, next);
-  }
+  auth(UserRole.HOST, UserRole.ADMIN),
+  validateRequest(eventValidation.updateEventZodValidationSchema),
+  EventController.updateEvent
 );
 
-router.delete("/:id", EventController.deleteEvent);
+router.delete("/:id", auth(UserRole.ADMIN), EventController.deleteEvent);
 
 export const eventRoutes = router;
