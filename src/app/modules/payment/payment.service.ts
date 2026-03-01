@@ -1,11 +1,11 @@
 import Stripe from "stripe";
 import { prisma } from "../../shared/prisma";
 import config from "../../config";
-import { BookingStatus, PaymentStatus } from "../../../../prisma/generated/enums";
+import { BookingStatus, PaymentMethod, PaymentStatus } from "../../../../prisma/generated/enums";
 import { stripe } from "../../Helper/stripe";
 
 
-const createStripeCheckoutSession = async (
+const createCheckoutSession = async (
   bookingId: string,
   userId: string
 ) => {
@@ -25,60 +25,77 @@ const createStripeCheckoutSession = async (
     throw new Error("Unauthorized booking access");
   }
 
-  if (booking.payment?.status === PaymentStatus.PAID) {
-    throw new Error("Booking already paid");
-  }
-
   if (!booking.payment) {
     throw new Error("Payment record not found");
   }
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
+  if (booking.payment.status === PaymentStatus.PAID) {
+    throw new Error("Booking already paid");
+  }
 
-    success_url: "https://abusaiyedjoy.vercel.app",
-    cancel_url: "https://abu-saiyed-joy.vercel.app",
+  // Cash Payment — auto confirm
+  if (booking.payment.method === PaymentMethod.CASH) {
+    await prisma.$transaction(async (tx) => {
+      await tx.payment.update({
+        where: { id: booking.payment!.id },
+        data: { status: PaymentStatus.PAID },
+      });
 
-    line_items: [
-      {
-        price_data: {
-          currency: "bdt",
-          product_data: {
-            name: booking.event.title,
+      await tx.booking.update({
+        where: { id: bookingId },
+        data: { status: BookingStatus.CONFIRMED },
+      });
+    });
+
+    return {
+      message: "Cash payment confirmed successfully",
+      paymentMethod: PaymentMethod.CASH,
+    };
+  }
+
+  // Stripe Payment — create checkout session
+  if (booking.payment.method === PaymentMethod.STRIPE) {
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      success_url: "https://abusaiyedjoy.vercel.app",
+      cancel_url: "https://abu-saiyed-joy.vercel.app",
+      line_items: [
+        {
+          price_data: {
+            currency: "bdt",
+            product_data: {
+              name: booking.event.title,
+            },
+            unit_amount: Math.round(Number(booking.totalAmount) * 100),
           },
-          unit_amount: Math.round(Number(booking.totalAmount) * 100),
+          quantity: 1,
         },
-        quantity: 1,
+      ],
+      metadata: {
+        bookingId: booking.id,
+        paymentId: booking.payment.id,
       },
-    ],
+    });
 
-    metadata: {
-      bookingId: booking.id,
-      paymentId: booking.payment.id,
-    },
-  });
+    return {
+      message: "Stripe checkout session created",
+      paymentMethod: PaymentMethod.STRIPE,
+      checkoutUrl: session.url,
+    };
+  }
 
-  return {
-    checkoutUrl: session.url,
-  };
+  throw new Error(`Unsupported payment method: ${booking.payment.method}`);
 };
 
 
-const handleStripeWebhookEvent = async (
-  req: any,
-  res: any
-) => {
+const handleStripeWebhookEvent = async (req: any, res: any) => {
   const sig = req.headers["stripe-signature"] as string;
   const webhookSecret = config.stripe.stripeWebhookSecret as string;
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      webhookSecret
-    );
+    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (err: any) {
     console.error("❌ Webhook signature verification failed.");
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -92,35 +109,27 @@ const handleStripeWebhookEvent = async (
       const paymentId = session.metadata?.paymentId;
 
       if (!bookingId || !paymentId) {
-        return res.status(200).json({
-          message: "Metadata missing",
-        });
+        return res.status(200).json({ message: "Metadata missing" });
       }
 
       await prisma.$transaction(async (tx) => {
-       
         await tx.payment.update({
           where: { id: paymentId },
-          data: {
-            status: PaymentStatus.PAID
-          },
+          data: { status: PaymentStatus.PAID },
         });
 
-        
         await tx.booking.update({
           where: { id: bookingId },
-          data: {
-            status: BookingStatus.CONFIRMED, 
-          },
+          data: { status: BookingStatus.CONFIRMED },
         });
       });
 
-      console.log("✅ Payment successful & booking confirmed");
+      console.log("✅ Stripe payment successful & booking confirmed");
       break;
     }
 
     case "checkout.session.expired":
-      console.log("⚠️ Checkout expired");
+      console.log("⚠️ Checkout session expired");
       break;
 
     case "payment_intent.payment_failed":
@@ -135,6 +144,6 @@ const handleStripeWebhookEvent = async (
 };
 
 export const PaymentService = {
-  createStripeCheckoutSession,
+  createCheckoutSession,
   handleStripeWebhookEvent,
 };

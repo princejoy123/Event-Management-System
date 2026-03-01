@@ -8,7 +8,8 @@ const router = express.Router();
 router.post(
   "/create-checkout-session",
   auth(UserRole.USER),
-  PaymentController.createStripeCheckoutSession
+  PaymentController.createCheckoutSession
 );
+
 
 export const paymentRoutes = router;
